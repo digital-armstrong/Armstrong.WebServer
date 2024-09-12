@@ -1,5 +1,4 @@
 require 'uart'
-
 class UartService
   attr_accessor :port, :package, :retry_limit, :delay_time
   attr_reader   :retry_count
@@ -31,7 +30,7 @@ class UartService
     retry_count < retry_limit
   end
 
-  def start_polling
+  def polling
     loop do
       return unless may_retry?
 
@@ -51,5 +50,12 @@ class UartService
 
       sleep(@delay_time)
     end
+  end
+
+  def start_polling
+    r = Ractor.new do
+      receive
+    end
+    r.send(polling)
   end
 end

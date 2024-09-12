@@ -70,3 +70,5 @@ group :test do
 end
 
 gem "uart", "~> 1.0"
+
+gem "simple_form", "~> 5.3"

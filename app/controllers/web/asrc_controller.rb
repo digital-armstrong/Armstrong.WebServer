@@ -1,7 +1,12 @@
 class Web::AsrcController < ApplicationController
-  require './lib/uart_service'
+  def index
+
+  end
   def start_polling
-    @uart = UartService.new('/dev/ttyUSB0')
-    @uart.start_polling
+    PollingJob.perform_later
+  end
+
+  def stop_polling
+    @uart.stop_polling
   end
 end
