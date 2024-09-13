@@ -2,7 +2,7 @@ require 'uart'
 class UartService
   attr_accessor :port, :package, :retry_limit, :delay_time
   attr_reader   :retry_count
-  @@ractors = []
+  @@threads = []
 
   def initialize(port, args = {})
     @port        = port
@@ -32,6 +32,7 @@ class UartService
   end
 
   def polling
+    @@threads << Thread.current
     loop do
       return unless may_retry?
 
@@ -57,13 +58,14 @@ class UartService
     r = Ractor.new do
       receive
     end
-    @@ractors<<r
     r.send(polling)
   end
 
   def self.stop_polling
-    @@ractors.each do |ractor|
-      puts ractor
-    end
+    @@threads&.each(&:kill)
+  end
+
+  def self.get_threads
+    @@threads
   end
 end
