@@ -3,7 +3,9 @@
 one:
   name: MyString
   rate: 1
+  server: one
 
 two:
   name: MyString
   rate: 1
+  server: two

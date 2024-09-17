@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 require 'uart'
 
 class UartService
   attr_accessor :port, :package, :retry_limit, :delay_time
   attr_reader   :retry_count
 
-  @@threads = []
+  @@threads = [] # rubocop:disable Style/ClassVars
 
   def initialize(port, args = {})
     @port        = port
-    @package     = args[:package]     || [0x01, 0x03, 0x00, 0x00, 0x00, 0x00, 0x45, 0xCA]
+    @package     = args[:package] || [0x01, 0x03, 0x00, 0x00, 0x00, 0x00, 0x45, 0xCA]
     @retry_count = 0
     @retry_limit = args[:retry_limit] || 5
     @delay_time  = args[:delay_time]  || 5
@@ -17,12 +19,12 @@ class UartService
   end
 
   def print_info
-    puts "\n\n================================"
-    puts "Port:\t\t#{@port}"
-    puts "Retry Limit:\t#{@retry_limit}"
-    puts "Package:\t#{@package}"
-    puts "Delay Time:\t#{@delay_time}"
-    puts "================================\n\n"
+    Rails.logger.debug "\n\n================================"
+    Rails.logger.debug { "Port:\t\t#{@port}" }
+    Rails.logger.debug { "Retry Limit:\t#{@retry_limit}" }
+    Rails.logger.debug { "Package:\t#{@package}" }
+    Rails.logger.debug { "Delay Time:\t#{@delay_time}" }
+    Rails.logger.debug "================================\n\n"
   end
 
   def port_available?
@@ -42,13 +44,13 @@ class UartService
           serial.write package.pack('C8')
           response = serial.read(8)
 
-          puts "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack('F')}"
+          Rails.logger.debug { "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack('F')}" }
         end
 
         @retry_count = 0
       else
         @retry_count += 1
-        pp "Port #{@port} is not available... Retry step #{@retry_count}"
+        Rails.logger.debug { "Port #{@port} is not available... Retry step #{@retry_count}" }
       end
 
       sleep(@delay_time)

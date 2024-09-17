@@ -1,0 +1,16 @@
+section#main
+  section#add-new-server
+    .card
+      .card-header = t('.add_new')
+        .card-body
+          = simple_form_for @server, url: server_index_path do |f|
+            = f.input :name
+            #ports
+              = f.simple_field_for :ports do |port|
+                .nested-fields
+                  = f.input :name, :collection => @connected_devices
+                  = f.input :rate, collection: @rates
+
+            = f.button :submit, class: 'btn btn-primary'
+
+  = render 'servers/servers_table', servers: @servers

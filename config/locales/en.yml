@@ -1,31 +1,36 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  true: "Ok"
+  false: "Have a problems"
+  time:
+    formats:
+      default: "%e %B %Y %H:%M"
+      time: "%H:%M:%S"
+      day_and_month: "%e %B"
+      date: "%e %B %Y"
+      short_full: "%d.%m.%Y %H:%M"
+      short_date: "%d.%m.%Y"
+      short_time: "%H:%M"
+      long: "%e %B %Y %H:%M"
+      full: "%e %B %Y %H:%M:%S"
+  devise:
+    sessions:
+      new:
+        form_header: Login
+        sign_in: Sign In
+        sign_up: Sign Up
+    registrations:
+      new:
+        form_header: Registration
+        sign_up: Sign Up
+    passwords:
+      new:
+        form_header: Reset password form
+        reset_password: Send me reset password instructions
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " and "
+      last_word_connector: ", and "
+  user_not_authenticated: You must be logged in or registered to perform this action
+  user_not_authorized: Not authorized to perform this action
+  user_not_admin: This section is only available to administrators

@@ -1,8 +1,19 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
-  root 'web/home#index'
-  resources :ports
+  scope module: :web do
+    root 'home#index'
+
+    resources :servers do
+      scope module: :servers do
+        resources :port, only: :create
+      end
+
+      member do
+        post :start_polling, :stop_polling
+      end
+    end
+  end
 
   get 'up' => 'rails/health#show', as: :rails_health_check
-  post 'web/asrc/start', to: 'web/asrc#start_polling', as: :start_polling
-  post 'web/asrc/stop', to: 'web/asrc#stop_polling', as: :stop_polling
 end

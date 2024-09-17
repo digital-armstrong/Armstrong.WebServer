@@ -1,0 +1,19 @@
+- if flash[:notice]
+ .container.mb-2.d-flex.flex-wrap.alert.alert-info
+    = flash[:notice]
+
+- if flash[:alert]
+ .container.mb-2.d-flex.flex-wrap.alert.alert-danger
+    = flash[:alert]
+
+- if flash[:success]
+ .container.mb-2.d-flex.flex-wrap.alert.alert-success
+    = flash[:success]
+
+- if flash[:warning]
+ .container.mb-2.d-flex.flex-wrap.alert.alert-warning
+    = flash[:warning]
+
+- if flash[:error]
+ .container.mb-2.d-flex.flex-wrap.alert.alert-danger
+    = flash[:error]

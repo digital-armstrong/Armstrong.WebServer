@@ -2,8 +2,6 @@
 
 one:
   name: MyString
-  port: one
 
 two:
   name: MyString
-  port: two

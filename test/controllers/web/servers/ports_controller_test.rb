@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ServerTest < ActiveSupport::TestCase
+class Web::Server::PortsControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end
