@@ -1,0 +1,2 @@
+module Web::ServerHelper
+end
