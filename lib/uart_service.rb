@@ -1,7 +1,9 @@
 require 'uart'
+
 class UartService
   attr_accessor :port, :package, :retry_limit, :delay_time
   attr_reader   :retry_count
+
   @@threads = []
 
   def initialize(port, args = {})
@@ -32,7 +34,6 @@ class UartService
   end
 
   def polling
-    @@threads << Thread.current
     loop do
       return unless may_retry?
 
@@ -41,7 +42,7 @@ class UartService
           serial.write package.pack('C8')
           response = serial.read(8)
 
-          puts "Time: #{DateTime.now.strftime("%F %T")}\t\tValue: #{response[2..6].unpack('F').first}"
+          puts "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack('F')}"
         end
 
         @retry_count = 0
@@ -54,18 +55,14 @@ class UartService
     end
   end
 
-  def start_polling
-    r = Ractor.new do
-      receive
-    end
-    r.send(polling)
+  def start_polling(server_id)
+    @@threads << {
+      serverd_id: server_id,
+      thread: Thread.new { poling }
+    }
   end
 
   def self.stop_polling
-    @@threads&.each(&:kill)
-  end
-
-  def self.get_threads
-    @@threads
+    @@threads.each(&:kill)
   end
 end

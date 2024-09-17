@@ -1,8 +1,10 @@
 class Web::AsrcController < ApplicationController
-  def index; end
+  def index
+  end
 
-  def start_polling
-    PollingJob.perform_later
+  def start_polling(server_id)
+    uart = UartService.new(params[:port])
+    uart.start_polling(server_id)
   end
 
   def stop_polling
