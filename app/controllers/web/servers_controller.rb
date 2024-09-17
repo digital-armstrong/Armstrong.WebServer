@@ -1,43 +1,41 @@
 # frozen_string_literal: true
 
-module Web
-  class ServersController < ApplicationController
-    before_action :set_server, only: %i[show]
+class Web::ServersController < Web::ApplicationController
+  before_action :set_server, only: %i[show]
 
-    def show; end
+  def show; end
 
-    def new
-      @server = Server.all
+  def new
+    @server = Server.all
+  end
+
+  def create
+    @server = Server.build(server_params)
+
+    if @server.save
+      flesh.now[:success] = t('.sucess')
+      redirect_to root_path
+    else
+      redirect_to root_path, status: :unprocessable_entity
     end
+  end
 
-    def create
-      @server = Server.build(server_params)
+  def start_polling(server_id)
+    uart = UartService.new(params[:port])
+    uart.start_polling(server_id)
+  end
 
-      if @server.save
-        flesh.now[:success] = t('.sucess')
-        redirect_to root_path
-      else
-        redirect_to root_path, status: :unprocessable_entity
-      end
-    end
+  def stop_polling
+    UartService.stop_polling
+  end
 
-    def start_polling(server_id)
-      uart = UartService.new(params[:port])
-      uart.start_polling(server_id)
-    end
+  private
 
-    def stop_polling
-      UartService.stop_polling
-    end
+  def set_server
+    @server = Server.find(params[:id])
+  end
 
-    private
-
-    def set_server
-      @server = Server.find(params[:id])
-    end
-
-    def server_params
-      params.require(:server).permit(:port_id, :name)
-    end
+  def server_params
+    params.require(:server).permit(:port_id, :name)
   end
 end
