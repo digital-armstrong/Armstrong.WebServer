@@ -6,7 +6,8 @@ class Web::HomeController < Web::ApplicationController
 
   def index
     @port = Port.new
-    @servers = Server.all
+    @server = Server.new
+    @port = @server.build_port
   end
 
   def new

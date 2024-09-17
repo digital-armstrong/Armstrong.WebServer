@@ -13,7 +13,7 @@ class Web::ServersController < Web::ApplicationController
     @server = Server.build(server_params)
 
     if @server.save
-      flesh.now[:success] = t('.sucess')
+      flash.now[:success] = t('.sucess')
       redirect_to root_path
     else
       redirect_to root_path, status: :unprocessable_entity
@@ -36,6 +36,6 @@ class Web::ServersController < Web::ApplicationController
   end
 
   def server_params
-    params.require(:server).permit(:port_id, :name)
+    params.require(:server).permit(:name, port_attributes: %i[name rate])
   end
 end

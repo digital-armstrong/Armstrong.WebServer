@@ -3,14 +3,11 @@ section#main
     .card
       .card-header = t('.add_new')
         .card-body
-          = simple_form_for @server, url: server_index_path do |f|
+          = simple_form_for @server do |f|
             = f.input :name
-            #ports
-              = f.simple_field_for :ports do |port|
+            #port
+              = f.simple_fields_for :port do |p|
                 .nested-fields
-                  = f.input :name, :collection => @connected_devices
-                  = f.input :rate, collection: @rates
-
+                  = p.input :name, :collection => @connected_devices
+                  = p.input :rate, collection: @rates
             = f.button :submit, class: 'btn btn-primary'
-
-  = render 'servers/servers_table', servers: @servers
