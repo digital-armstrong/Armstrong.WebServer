@@ -1,13 +1,3 @@
 section#main
-  section#add-new-server
-    .card
-      .card-header = t('.add_new')
-        .card-body
-          = simple_form_for @server do |f|
-            = f.input :name
-            #port
-              = f.simple_fields_for :port do |p|
-                .nested-fields
-                  = p.input :name, :collection => @connected_devices
-                  = p.input :rate, collection: @rates
-            = f.button :submit, class: 'btn btn-primary'
+  = render 'add_new_server_form'
+  = render 'web/servers/servers_table', servers: @servers
