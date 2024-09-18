@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require 'uart'
-
 class UartService
   attr_accessor :port, :package, :retry_limit, :delay_time
   attr_reader   :retry_count
 
-  @@threads = [] # rubocop:disable Style/ClassVars
+  @@servers_threads = [] # rubocop:disable Style/ClassVars
 
   def initialize(port, args = {})
     @port        = port
@@ -43,11 +42,14 @@ class UartService
         UART.open @port do |serial|
           serial.write package.pack('C8')
           response = serial.read(8)
-
-          Rails.logger.debug { "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack('F')}" }
+          if response.nil?
+            Rails.logger.debug { "Invalid answer for port #{@port}..." }
+          else
+            @retry_count = 0
+            Rails.logger.debug { "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack1('F')}" }
+          end
         end
 
-        @retry_count = 0
       else
         @retry_count += 1
         Rails.logger.debug { "Port #{@port} is not available... Retry step #{@retry_count}" }
@@ -58,13 +60,30 @@ class UartService
   end
 
   def start_polling(server_id)
-    @@threads << {
+    return if @@servers_threads.any? { |t| t[:serverd_id] == server_id }
+
+    @@servers_threads << {
       serverd_id: server_id,
-      thread: Thread.new { poling }
+      thread: Thread.new do
+        Rails.logger.debug { "\033[32mThread for server #{server_id} was started" }
+        polling
+        Rails.logger.debug { "\033[31mThread for server #{server_id} was stopped" }
+        server_thread = @@servers_threads.detect { |t| t[:thread] == Thread.current }
+        @@servers_threads.delete(server_thread) if @@servers_threads.include?(server_thread)
+        Rails.logger.debug @@servers_threads
+        Thread.current.kill
+      end
     }
   end
 
-  def self.stop_polling
-    @@threads.each(&:kill)
+  def self.stop_polling(server_id)
+    server_thread = @@servers_threads.detect { |t| t[:serverd_id] == server_id }
+
+    return if server_thread.blank?
+
+    server_thread[:thread].kill
+    @@servers_threads.delete(server_thread)
+
+    Rails.logger.debug { "\033[31mThread for server #{server_id} was stopped" }
   end
 end

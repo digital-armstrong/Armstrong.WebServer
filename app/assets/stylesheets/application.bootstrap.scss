@@ -1,2 +1,17 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
+
+.x-pinned-td {
+  position: sticky;
+  right:  0;
+  background: white;
+  z-index:  1;
+}
+
+.x-pinned-th {
+  position: sticky;
+  right: 0;
+  background: white;
+  z-index:  1;
+  width: 10%;
+}
