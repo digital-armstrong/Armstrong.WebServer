@@ -3,7 +3,7 @@
 class Server < ApplicationRecord
   has_one :port, dependent: :destroy
 
-  validates :name, presence: true, uniqueness: true # rubocop:disable Rails/UniqueValidationWithoutIndex
+  validates :name, presence: true, uniqueness: true
 
   accepts_nested_attributes_for :port
 end
