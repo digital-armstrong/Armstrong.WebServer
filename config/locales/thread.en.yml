@@ -1,0 +1,5 @@
+en:
+  thread:
+    thread_started: "Thread for server %{server_id} was started"
+    thread_stopped: "Thread for server %{server_id} was stopped"
+    thread_not_found: "Thread for server %{server_id} was not found"

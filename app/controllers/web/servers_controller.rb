@@ -2,6 +2,7 @@
 
 class Web::ServersController < Web::ApplicationController
   before_action :set_server, only: %i[start_polling stop_polling]
+  before_action :set_uart, only: %i[start_polling stop_polling]
 
   def show; end
 
@@ -20,12 +21,13 @@ class Web::ServersController < Web::ApplicationController
   end
 
   def start_polling
-    uart = UartService.new(@server.port.name)
-    uart.start_polling(@server.id)
+    @uart.start_polling(@server.id)
+    respond_to { |format| format.turbo_stream }
   end
 
   def stop_polling
-    UartService.stop_polling(@server.id)
+    @uart.stop_polling(@server.id)
+    respond_to { |format| format.turbo_stream }
   end
 
   private
@@ -36,5 +38,9 @@ class Web::ServersController < Web::ApplicationController
 
   def server_params
     params.require(:server).permit(:name, port_attributes: %i[name rate])
+  end
+
+  def set_uart
+    @uart = UartService.new(@server.port.name)
   end
 end

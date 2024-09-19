@@ -30,29 +30,23 @@ class UartService
     Dir.glob(@port).count == 1
   end
 
-  def may_retry?
-    retry_count < retry_limit
-  end
-
   def polling
     loop do
-      return unless may_retry?
-
       if port_available?
         UART.open @port do |serial|
           serial.write package.pack('C8')
           response = serial.read(8)
           if response.nil?
-            Rails.logger.debug { "Invalid answer for port #{@port}..." }
+            Rails.logger.info { "Invalid answer for port #{@port}..." }
           else
             @retry_count = 0
-            Rails.logger.debug { "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack1('F')}" }
+            Rails.logger.info { "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack1('F')}" }
           end
         end
 
       else
         @retry_count += 1
-        Rails.logger.debug { "Port #{@port} is not available... Retry step #{@retry_count}" }
+        Rails.logger.info { "Port #{@port} is not available... Retry step #{@retry_count}" }
       end
 
       sleep(@delay_time)
@@ -60,29 +54,35 @@ class UartService
   end
 
   def start_polling(server_id)
-    return if @@servers_threads.any? { |t| t[:serverd_id] == server_id }
+    return if @@servers_threads.any? { |t| t[:server_id] == server_id }
 
     @@servers_threads << {
-      serverd_id: server_id,
+      server_id:,
       thread: Thread.new do
-        Rails.logger.debug { "\033[32mThread for server #{server_id} was started" }
+        Rails.logger.info { "\033[32m#{I18n.t('thread.thread_started', server_id:)}" }
         polling
-        Rails.logger.debug { "\033[31mThread for server #{server_id} was stopped" }
-        server_thread = @@servers_threads.detect { |t| t[:thread] == Thread.current }
-        @@servers_threads.delete(server_thread) if @@servers_threads.include?(server_thread)
-        Thread.current.kill
       end
     }
   end
 
-  def self.stop_polling(server_id)
-    server_thread = @@servers_threads.detect { |t| t[:serverd_id] == server_id }
+  def stop_polling(server_id)
+    detect_and_stop_server_thread(server_id)
+  end
 
-    return if server_thread.blank?
+  private
 
-    server_thread[:thread].kill
-    @@servers_threads.delete(server_thread)
+  def detect_and_stop_server_thread(server_id)
+    server_thread = @@servers_threads.detect { |t| t[:server_id] == server_id }
 
-    Rails.logger.debug { "\033[31mThread for server #{server_id} was stopped" }
+    if server_thread.nil?
+      Rails.logger.info { "\033[31m#{I18n.t('thread.thread_not_found', server_id:)}" }
+
+      nil
+    else
+      server_thread[:thread].kill
+      @@servers_threads.delete(server_thread)
+
+      Rails.logger.debug { "\033[31m#{I18n.t('thread.thread_stopped', server_id:)}" }
+    end
   end
 end
