@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class Web::ServersController < Web::ApplicationController
-  before_action :set_server, only: %i[show]
+  before_action :set_server, only: %i[start_polling stop_polling]
 
   def show; end
 
   def new
-    @server = Server.all
+    @server = Server.new
   end
 
   def create
@@ -20,19 +20,12 @@ class Web::ServersController < Web::ApplicationController
   end
 
   def start_polling
-    server = Server.find(params[:id])
-    uart = UartService.new(server.port.name)
-    uart.start_polling(server.id)
-  end
-
-  def pause_polling
-    server = Server.find(params[:id])
-    UartService.pause_polling(server.id)
+    uart = UartService.new(@server.port.name)
+    uart.start_polling(@server.id)
   end
 
   def stop_polling
-    server = Server.find(params[:id])
-    UartService.stop_polling(server.id)
+    UartService.stop_polling(@server.id)
   end
 
   private
