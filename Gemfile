@@ -79,6 +79,6 @@ gem 'rubocop-rails', '~> 2.26'
 
 gem 'rubocop-performance', '~> 1.22'
 
-gem "slim-rails", "~> 3.6"
+gem 'slim-rails', '~> 3.6'
 
-gem "slim_lint", "~> 0.29.0"
+gem 'slim_lint', '~> 0.29.0'

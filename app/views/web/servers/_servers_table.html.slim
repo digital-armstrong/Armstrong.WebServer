@@ -1,14 +1,29 @@
 section#servers_table
- table.table.table-striped.table-hover.mt-4
-  thead
-    tr
-      th = Server.human_attribute_name(:name)
-      th = Port.human_attribute_name(:name)
-      th = Port.human_attribute_name(:rate)
-  tbody
-    - servers.each do |server|
-      tr
-        td = server.name
-        td = server.port.name
-        td = server.port.rate
-
+  .table-responsive
+    table.table.table-hover.text-nowrap.mt-4
+      thead
+        tr
+          th = Server.human_attribute_name(:id)
+          th = Server.human_attribute_name(:name)
+          th = Port.human_attribute_name(:name)
+          th = Port.human_attribute_name(:rate)
+          th.x-pinned-th = t('.action')
+      tbody
+        - servers.each do |server|
+          tr
+            td = server.id
+            td = server.name
+            td = server.port.name
+            td = server.port.rate
+            td.x-pinned-td
+              .d-flex.justify-content-start.align-items-start
+                div(title="#{t('.start_thread_btn')}")
+                  = link_to start_polling_server_path(server),
+                  data: { turbo_method: :post },
+                  class: 'btn btn-lg' do
+                    i.bi.bi-play-btn-fill.text-success
+                div(title="#{t('.stop_thread_btn')}")
+                  = link_to stop_polling_server_path(server),
+                  data: { turbo_method: :post, turbo_confirm: t('.stop_confirm') },
+                  class: 'btn btn-lg' do
+                    i.bi.bi-stop-btn-fill.text-danger

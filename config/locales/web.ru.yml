@@ -1,2 +1,8 @@
 ru:
   web:
+    servers:
+      servers_table:
+        start_thread_btn: "Запустить поток опроса"
+        pause_thread_btn: "Приостановить поток опроса"
+        stop_thread_btn: "Прервать поток опроса"
+        stop_confirm: "Остановить поток?"

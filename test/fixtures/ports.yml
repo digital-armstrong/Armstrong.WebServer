@@ -1,11 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
+  name: MyString1
   rate: 1
   server: one
 
 two:
-  name: MyString
+  name: MyString2
   rate: 1
   server: two

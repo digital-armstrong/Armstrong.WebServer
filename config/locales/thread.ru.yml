@@ -1,0 +1,5 @@
+ru:
+  thread:
+    thread_started: "Поток для сервера %{server_id} был запущен"
+    thread_stopped: "Поток для сервера %{server_id} был остановлен"
+    thread_not_found: "Поток для сервера %{server_id} не был найден"
