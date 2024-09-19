@@ -70,7 +70,6 @@ class UartService
         Rails.logger.debug { "\033[31mThread for server #{server_id} was stopped" }
         server_thread = @@servers_threads.detect { |t| t[:thread] == Thread.current }
         @@servers_threads.delete(server_thread) if @@servers_threads.include?(server_thread)
-        Rails.logger.debug @@servers_threads
         Thread.current.kill
       end
     }
