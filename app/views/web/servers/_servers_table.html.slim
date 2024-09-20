@@ -7,6 +7,7 @@ section#servers_table
           th = Server.human_attribute_name(:name)
           th = Port.human_attribute_name(:name)
           th = Port.human_attribute_name(:rate)
+          th = Server.human_attribute_name(:aasm_state)
           th.x-pinned-th = t('.action')
       tbody
         - servers.each do |server|
@@ -15,6 +16,7 @@ section#servers_table
             td = server.name
             td = server.port.name
             td = server.port.rate
+            td = server.aasm_state
             td.x-pinned-td
               .d-flex.justify-content-start.align-items-start
                 div(title="#{t('.start_thread_btn')}")

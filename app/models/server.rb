@@ -9,7 +9,7 @@ class Server < ApplicationRecord
 
   accepts_nested_attributes_for :port
 
-  aasm column: :aasm_status do
+  aasm column: :aasm_state do
     state :created, initial: true
     state :idle, :polling, :panic
 

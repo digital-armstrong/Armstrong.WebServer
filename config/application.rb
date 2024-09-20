@@ -15,5 +15,12 @@ module ArmstrongWebServer
 
     config.i18n.available_locales = %i[en ru]
     config.i18n.default_locale = :ru
+
+    config.after_initialize do
+      servers = Server.all
+      servers&.each do |server|
+        server.ready_to_polling! if server.may_ready_to_polling?
+      end
+    end
   end
 end
