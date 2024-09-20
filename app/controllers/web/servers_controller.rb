@@ -21,12 +21,12 @@ class Web::ServersController < Web::ApplicationController
   end
 
   def start_polling
-    @uart.start_polling(@server.id)
+    @uart.start_polling
     respond_to { |format| format.turbo_stream }
   end
 
   def stop_polling
-    @uart.stop_polling(@server.id)
+    @uart.stop_polling
     respond_to { |format| format.turbo_stream }
   end
 
@@ -41,6 +41,6 @@ class Web::ServersController < Web::ApplicationController
   end
 
   def set_uart
-    @uart = UartService.new(@server.port.name)
+    @uart = UartService.new(@server)
   end
 end
