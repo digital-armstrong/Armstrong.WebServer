@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_19_042700) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_20_063225) do
   create_table "ports", force: :cascade do |t|
     t.string "name"
     t.integer "rate"
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_19_042700) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "aasm_state", default: "created"
     t.index ["name"], name: "index_servers_on_name", unique: true
   end
 

@@ -82,3 +82,5 @@ gem 'rubocop-performance', '~> 1.22'
 gem 'slim-rails', '~> 3.6'
 
 gem 'slim_lint', '~> 0.29.0'
+
+gem "aasm", "~> 5.5"
