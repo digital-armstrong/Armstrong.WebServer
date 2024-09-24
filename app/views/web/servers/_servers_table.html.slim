@@ -11,7 +11,7 @@ section#servers_table
           th.x-pinned-th = t('.action')
       tbody
         - servers.each do |server|
-          tr
+          tr(style='vertical-align: middle;')
             td = server.id
             td = server.name
             td = server.port.name

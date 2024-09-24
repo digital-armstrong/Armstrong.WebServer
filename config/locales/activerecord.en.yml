@@ -1,0 +1,17 @@
+ru:
+  activerecord:
+    models:
+      servers: Servers
+      server: Server
+    attributes:
+      server:
+        id: ID
+        name: Server name
+        aasm_state: Server state
+      port:
+        name: Port name
+        rate: BaudRate
+    errors:
+      messages:
+        blank: can't be blank
+        taken: is already taken
