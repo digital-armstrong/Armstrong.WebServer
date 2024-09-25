@@ -1,24 +1,42 @@
-# README
+# Armstrong.Web
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+![cover](https://user-images.githubusercontent.com/46975515/218666180-742098ba-98f2-4979-960b-6a706436372f.png)
 
-Things you may want to cover:
+ARMStrong.WebServer -- a monolith analog of [Armstrong.Server](https://github.com/digital-armstrong/Armstrong.Server) 
+with the ability to control polling through a web interface.
 
-* Ruby version
+## Local installation
 
-* System dependencies
+```bash
+git clone git@github.com:digital-armstrong/Armstrong.WebServer.git && \
+    cd Armstrong.WebServer && \
+    make setup
+```
 
-* Configuration
+## Starting project
 
-* Database creation
+```bash
+make start-dev
+```
 
-* Database initialization
+## Refreshing database
 
-* How to run the test suite
+```bash
+make cleanup
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Starting tests and linting code
 
-* Deployment instructions
+```bash
+make check
+```
 
-* ...
+Or start them separately:
+
+```bash
+make lint
+```
+
+```bash
+make test
+```
