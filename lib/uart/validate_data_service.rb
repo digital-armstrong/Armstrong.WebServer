@@ -3,7 +3,7 @@
 # TODO: extend this snippet
 module UART
   class << self
-    def validate_data(data)
+    def validate_data(_data)
       true
     end
 
@@ -11,7 +11,7 @@ module UART
       data.size == 8
     end
 
-    def valid_format?(data)
+    def valid_format?(_data)
       true
     end
   end
