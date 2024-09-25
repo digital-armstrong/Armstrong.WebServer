@@ -1,0 +1,30 @@
+---
+name: armstrong-ci
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "21.6.2"
+          cache: "npm"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - run: |
+          make setup
+          bin/rails assets:precompile
+          make test
+          make lint
