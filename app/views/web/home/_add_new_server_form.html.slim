@@ -7,6 +7,6 @@ section#add-new-server
         #port
           = f.simple_fields_for :port do |p|
             .nested-fields
-              = p.input :name, :collection => @connected_devices
-              = p.input :rate, collection: @rates
+              = p.input :name, collection: @connected_devices, include_blank: false
+              = p.input :rate, collection: @rates, include_blank: false
         = f.button :submit, class: 'btn btn-primary'

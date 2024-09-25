@@ -1,32 +1,33 @@
 # frozen_string_literal: true
 
 class Web::ServersController < Web::ApplicationController
-  before_action :set_server, only: %i[show]
+  before_action :set_server, only: %i[start_polling stop_polling]
+  before_action :set_uart, only: %i[start_polling stop_polling]
 
   def show; end
 
   def new
-    @server = Server.all
+    @server = Server.new
   end
 
   def create
     @server = Server.build(server_params)
 
     if @server.save
-      flash.now[:success] = t('.sucess')
-      redirect_to root_path
+      redirect_to root_path, notice: t('.success')
     else
-      redirect_to root_path, status: :unprocessable_entity
+      redirect_to root_path, alert: @server.errors.full_messages.join('. ')
     end
   end
 
-  def start_polling(server_id)
-    uart = UartService.new(params[:port])
-    uart.start_polling(server_id)
+  def start_polling
+    @uart.start_polling
+    respond_to { |format| format.turbo_stream }
   end
 
   def stop_polling
-    UartService.stop_polling
+    @uart.stop_polling
+    respond_to { |format| format.turbo_stream }
   end
 
   private
@@ -37,5 +38,9 @@ class Web::ServersController < Web::ApplicationController
 
   def server_params
     params.require(:server).permit(:name, port_attributes: %i[name rate])
+  end
+
+  def set_uart
+    @uart = UartService.new(@server)
   end
 end
