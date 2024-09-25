@@ -1,11 +1,16 @@
 setup:
-	bundle
+	bundle install
 	yarn install
-	rails db:migrate
+	yarn build
+	yarn build:css
+	bin/rails db:create db:migrate 
 
 start-dev:
 	rm -rf tmp/pids/server.pid
 	bin/dev
+
+cleanup:
+	bin/rauiils db:drop db:create db:migrate
 
 check: test lint
 
