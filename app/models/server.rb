@@ -10,11 +10,11 @@ class Server < ApplicationRecord
   accepts_nested_attributes_for :port
 
   aasm column: :aasm_state do
-    state :created, initial: true
-    state :idle, :polling, :panic
+    state :idle, initial: true
+    state :polling, :panic
 
     event :ready_to_polling do
-      transitions from: %i[created polling panic], to: :idle
+      transitions from: %i[polling panic], to: :idle
     end
 
     event :start_polling do

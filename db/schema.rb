@@ -25,7 +25,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_20_063225) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "aasm_state", default: "created"
+    t.string "aasm_state", default: "idle"
     t.index ["name"], name: "index_servers_on_name", unique: true
   end
 

@@ -54,7 +54,7 @@ class UartService
   end
 
   def start_polling
-    return if $servers_threads.any? { |t| t[:server_id] == @server.id }
+    return nil unless @server.may_start_polling?
 
     $servers_threads << {
       server_id: @server.id,
@@ -64,6 +64,8 @@ class UartService
         polling
       end
     }
+
+    @server
   end
 
   def stop_polling
@@ -84,6 +86,7 @@ class UartService
       $servers_threads.delete(server_thread)
 
       Rails.logger.debug { "\033[31m#{I18n.t('thread.thread_stopped', server_id: @server.id)}" }
+      @server
     end
   end
 end
