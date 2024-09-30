@@ -5,8 +5,6 @@ class UartService
   attr_accessor :server, :port, :rate, :package, :retry_limit, :delay_time
   attr_reader   :retry_count
 
-  @@servers_threads = [] # rubocop:disable Style/ClassVars
-
   def initialize(server, args = {})
     @server      = server
     @port        = server.port.name
@@ -56,9 +54,9 @@ class UartService
   end
 
   def start_polling
-    return if @@servers_threads.any? { |t| t[:server_id] == @server.id }
+    return if $servers_threads.any? { |t| t[:server_id] == @server.id }
 
-    @@servers_threads << {
+    $servers_threads << {
       server_id: @server.id,
       server_name: @server.name,
       thread: Thread.new do
@@ -75,7 +73,7 @@ class UartService
   private
 
   def detect_and_stop_server_thread
-    server_thread = @@servers_threads.detect { |t| t[:server_id] == @server.id }
+    server_thread = $servers_threads.detect { |t| t[:server_id] == @server.id }
 
     if server_thread.nil?
       Rails.logger.info { "\033[31m#{I18n.t('thread.thread_not_found', server_id: @server.id)}" }
@@ -83,7 +81,7 @@ class UartService
       nil
     else
       server_thread[:thread].kill
-      @@servers_threads.delete(server_thread)
+      $servers_threads.delete(server_thread)
 
       Rails.logger.debug { "\033[31m#{I18n.t('thread.thread_stopped', server_id: @server.id)}" }
     end
