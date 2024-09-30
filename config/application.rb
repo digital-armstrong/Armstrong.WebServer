@@ -28,6 +28,7 @@ module ArmstrongWebServer
     end
 
     config.after_initialize do
+      $servers_threads = []
       next unless Server.table_exists?
 
       servers = Server.all
