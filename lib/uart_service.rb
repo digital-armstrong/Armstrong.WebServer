@@ -40,6 +40,9 @@ class UartService
             Rails.logger.info { "Invalid answer for port #{@port}..." }
           else
             @retry_count = 0
+            if @server.may_start_polling?
+              @server.start_polling!
+            end
             Rails.logger.info { "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack1('F')}" }
           end
         end
@@ -47,6 +50,9 @@ class UartService
       else
         @retry_count += 1
         Rails.logger.info { "Port #{@port} is not available... Retry step #{@retry_count}" }
+        if @server.may_panic?
+          @server.panic!
+        end
       end
 
       sleep(@delay_time)
