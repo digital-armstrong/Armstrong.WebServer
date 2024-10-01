@@ -21,12 +21,17 @@ class Web::ServersController < Web::ApplicationController
   end
 
   def start_polling
-    @uart.start_polling
+    server_to_start = @uart.start_polling
+    server_to_start.start_polling! if server_to_start&.may_start_polling?
+
     respond_to { |format| format.turbo_stream }
   end
 
   def stop_polling
-    @uart.stop_polling
+    server_to_stop = @uart.stop_polling
+
+    server_to_stop.ready_to_polling! if server_to_stop&.may_ready_to_polling?
+
     respond_to { |format| format.turbo_stream }
   end
 
