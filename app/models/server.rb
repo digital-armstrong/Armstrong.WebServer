@@ -6,7 +6,7 @@ class Server < ApplicationRecord
   has_one :port, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
-
+  after_update_commit :change_state
   accepts_nested_attributes_for :port
 
   aasm column: :aasm_state do
@@ -24,5 +24,15 @@ class Server < ApplicationRecord
     event :panic do
       transitions from: :polling, to: :panic
     end
+  end
+
+  private
+
+  def change_state
+    ActionCable.server.broadcast('server_channel', rendered_server)
+  end
+
+  def rendered_server
+    ApplicationController.renderer.render(partial: 'web/servers/server', locals: { server: self })
   end
 end

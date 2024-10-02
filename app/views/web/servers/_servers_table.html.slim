@@ -11,22 +11,4 @@ section#servers_table
           th.x-pinned-th = t('.action')
       tbody
         - servers.each do |server|
-          tr(style='vertical-align: middle;' data-controller="home" data-home-serverid-value=server.id)
-            td = server.id
-            td = server.name
-            td = server.port.name
-            td = server.port.rate
-            td = turbo_frame_tag server
-              = server.aasm_state
-            td.x-pinned-td
-              .d-flex.justify-content-start.align-items-start
-                div(title="#{t('.start_thread_btn')}")
-                  = link_to start_polling_server_path(server),
-                  data: { turbo_method: :post },
-                  class: 'btn btn-lg' do
-                    i.bi.bi-play-btn-fill.text-success
-                div(title="#{t('.stop_thread_btn')}")
-                  = link_to stop_polling_server_path(server),
-                  data: { turbo_method: :post, turbo_confirm: t('.stop_confirm') },
-                  class: 'btn btn-lg' do
-                    i.bi.bi-stop-btn-fill.text-danger
+          = render 'web/servers/server', server: server

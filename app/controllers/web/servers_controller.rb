@@ -37,7 +37,7 @@ class Web::ServersController < Web::ApplicationController
       server_to_stop.ready_to_polling!
       redirect_to root_path
     else
-      render :index
+      redirect_to root_path, alert: 'Поток не может быть остановлен, потому что не запущен'
     end
   end
 

@@ -36,13 +36,14 @@ class UartService
         UART.open @port do |serial|
           serial.write package.pack('C8')
           response = serial.read(8)
+          if @server.may_ready_to_polling? && !@server.polling?
+            @server.ready_to_polling!
+            @server.start_polling!
+          end
           if response.nil?
             Rails.logger.info { "Invalid answer for port #{@port}..." }
           else
             @retry_count = 0
-            if @server.may_start_polling?
-              @server.start_polling!
-            end
             Rails.logger.info { "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack1('F')}" }
           end
         end
@@ -50,9 +51,7 @@ class UartService
       else
         @retry_count += 1
         Rails.logger.info { "Port #{@port} is not available... Retry step #{@retry_count}" }
-        if @server.may_panic?
-          @server.panic!
-        end
+        @server.panic! if @server.may_panic?
       end
 
       sleep(@delay_time)
