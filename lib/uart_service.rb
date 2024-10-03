@@ -41,16 +41,17 @@ class UartService
             @server.start_polling!
           end
           if response.nil?
-            Rails.logger.info { "Invalid answer for port #{@port}..." }
+            ActionCable.server.broadcast('servers_channel', { html: "[#{DateTime.now.strftime('%F %T')}]\t(server##{@server.id})<span class='text-warning'>\tInvalid answer for port #{@port}...</span>", dom_id: "server_#{@server.id}", event_id: 2 })
           else
             @retry_count = 0
-            Rails.logger.info { "Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack1('F')}" }
+            ActionCable.server.broadcast('servers_channel', { html: "<p class='text-success'>Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack1('F')}</p>", dom_id: "server_#{@server.id}", event_id: 2 })
           end
         end
 
       else
         @retry_count += 1
-        Rails.logger.info { "Port #{@port} is not available... Retry step #{@retry_count}" }
+        ActionCable.server.broadcast('servers_channel', { html: "<p class='text-danger'>Port #{@port} is not available... Retry step #{@retry_count}</p>", dom_id: "server_#{@server.id}", event_id: 2 })
+
         @server.panic! if @server.may_panic?
       end
 
@@ -65,7 +66,8 @@ class UartService
       server_id: @server.id,
       server_name: @server.name,
       thread: Thread.new do
-        Rails.logger.info { "\033[32m#{I18n.t('thread.thread_started', server_id: @server.id)}" }
+        ActionCable.server.broadcast('servers_channel', { html: "<p class='text-success'>#{I18n.t('thread.thread_started', server_id: @server.id)}</p>", dom_id: "server_#{@server.id}", event_id: 2 })
+
         polling
       end
     }
@@ -90,7 +92,7 @@ class UartService
       server_thread[:thread].kill
       $servers_threads.delete(server_thread) # rubocop :disable Style/GlobalVars
 
-      Rails.logger.debug { "\033[31m#{I18n.t('thread.thread_stopped', server_id: @server.id)}" }
+      ActionCable.server.broadcast('servers_channel', { html: "#{I18n.t('thread.thread_stopped', server_id: @server.id)}", dom_id: "server_#{@server.id}", event_id: 2 })
       @server
     end
   end

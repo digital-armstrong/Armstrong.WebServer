@@ -10,7 +10,15 @@ consumer.subscriptions.create("ServersChannel", {
   },
 
   received(data) {
-    const event = new CustomEvent('updateServer', { detail: data });
+    var event;
+    switch (data.event_id) {
+      case 1:
+        event = new CustomEvent('updateServer', { detail: data });
+        break;
+      case 2:
+        event = new CustomEvent('serverInvalidAnswer', { detail: data });
+        break;
+    }
     window.dispatchEvent(event);
   }
 });
