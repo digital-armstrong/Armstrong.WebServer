@@ -1,6 +1,6 @@
-section#servers_table
+section#servers_table(data-controller="home")
   .table-responsive
-    table.table.table-hover.text-nowrap.mt-4
+    table.table.table-hover.text-nowrap.mt-4(data-home-target="container")
       thead
         tr
           th = Server.human_attribute_name(:id)
@@ -9,6 +9,6 @@ section#servers_table
           th = Port.human_attribute_name(:rate)
           th = Server.human_attribute_name(:aasm_state)
           th.x-pinned-th = t('.action')
-      tbody
+      tbody(data-home-target="server")
         - servers.each do |server|
           = render 'web/servers/server', server: server

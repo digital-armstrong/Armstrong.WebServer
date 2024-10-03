@@ -29,7 +29,7 @@ class Server < ApplicationRecord
   private
 
   def change_state
-    ActionCable.server.broadcast('server_channel', rendered_server)
+    ActionCable.server.broadcast('servers_channel', { html: rendered_server, dom_id: "server_#{id}" })
   end
 
   def rendered_server

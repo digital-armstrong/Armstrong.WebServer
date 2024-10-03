@@ -22,23 +22,17 @@ class Web::ServersController < Web::ApplicationController
 
   def start_polling
     server_to_start = @uart.start_polling
-    if server_to_start&.may_start_polling?
-      server_to_start.start_polling!
-      redirect_to root_path
-    else
-      redirect_to root_path, alert: 'Поток не может быть запущен, потому что уже запущен'
-    end
+    return unless server_to_start&.may_start_polling?
+
+    server_to_start.start_polling!
   end
 
   def stop_polling
     server_to_stop = @uart.stop_polling
 
-    if server_to_stop&.may_ready_to_polling?
-      server_to_stop.ready_to_polling!
-      redirect_to root_path
-    else
-      redirect_to root_path, alert: 'Поток не может быть остановлен, потому что не запущен'
-    end
+    return unless server_to_stop&.may_ready_to_polling?
+
+    server_to_stop.ready_to_polling!
   end
 
   private

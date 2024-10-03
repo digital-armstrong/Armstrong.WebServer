@@ -1,9 +1,9 @@
-tr(style='vertical-align: middle;' data-controller="home" data-home-serverid-value=server.id)
+tr.server(style='vertical-align: middle' id=dom_id(server))
   td = server.id
   td = server.name
   td = server.port.name
   td = server.port.rate
-  td = turbo_frame_tag server
+  td
     span(class="badge bg-#{select_color(server.aasm_state)}")
       h6.m-1 = server.aasm_state
   td.x-pinned-td
