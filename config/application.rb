@@ -28,7 +28,7 @@ module ArmstrongWebServer
     end
 
     config.after_initialize do
-      $servers_threads = []
+      $servers_threads = [] # rubocop :disable Style/GlobalVars
       next unless Server.table_exists?
 
       servers = Server.all

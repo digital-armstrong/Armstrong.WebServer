@@ -61,7 +61,7 @@ class UartService
   def start_polling
     return nil unless @server.may_start_polling?
 
-    $servers_threads << {
+    $servers_threads << { # rubocop :disable Style/GlobalVars
       server_id: @server.id,
       server_name: @server.name,
       thread: Thread.new do
@@ -80,7 +80,7 @@ class UartService
   private
 
   def detect_and_stop_server_thread
-    server_thread = $servers_threads.detect { |t| t[:server_id] == @server.id }
+    server_thread = $servers_threads.detect { |t| t[:server_id] == @server.id } # rubocop :disable Style/GlobalVars
 
     if server_thread.nil?
       Rails.logger.info { "\033[31m#{I18n.t('thread.thread_not_found', server_id: @server.id)}" }
@@ -88,7 +88,7 @@ class UartService
       nil
     else
       server_thread[:thread].kill
-      $servers_threads.delete(server_thread)
+      $servers_threads.delete(server_thread) # rubocop :disable Style/GlobalVars
 
       Rails.logger.debug { "\033[31m#{I18n.t('thread.thread_stopped', server_id: @server.id)}" }
       @server

@@ -1,7 +1,9 @@
 .accordion#serverForm
   .accordion-item
     h2.accordion-header#headingForm
-      button.accordion-button.collapsed(type='button' data-bs-toggle='collapse' data-bs-target='#collapseForm' aria-expanded='false' aria-controls='collapseForm')
+      button.accordion-button.collapsed(type='button'
+      data-bs-toggle='collapse' data-bs-target='#collapseForm' \
+      aria-expanded='false' aria-controls='collapseForm')
         = t('.add_new')
     .accordion-collapse.collapse#collapseForm(aria-labelledby='headingForm' data-bs-parent='#serverForm')
       .accordion-body
