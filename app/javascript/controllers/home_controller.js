@@ -14,15 +14,15 @@ export default class extends Controller {
       this.dataFromAppCable.push(event.detail);
       this.serverUpdate();
     });
-    window.addEventListener('serverInvalidAnswer', (event) => {
+    window.addEventListener('terminalUpdate', (event) => {
       this.dataFromAppCable.push(event.detail);
-      this.toastUpServerInvalidAnswer();
+      this.appendToTerminal();
     });
   }
 
   disconnect(){
     window.removeEventListener("updateServer");
-    window.removeEventListener("serverInvalidAnswer");
+    window.removeEventListener("terminalUpdate");
   }
 
   serverUpdate() {
@@ -33,10 +33,10 @@ export default class extends Controller {
     this.dataFromAppCable = [];
   });
   }
-  toastUpServerInvalidAnswer(){
+  appendToTerminal(){
     this.dataFromAppCable.forEach(element => {
       const terminal = document.getElementById('terminal');
-      terminal.insertAdjacentHTML('beforeend', '<p>' + element.html + '</p>');
+      terminal.insertAdjacentHTML('beforeend', element.html);
       this.dataFromAppCable = [];
     });
   }

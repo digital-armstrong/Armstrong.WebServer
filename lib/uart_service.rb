@@ -2,6 +2,8 @@
 
 require 'uart'
 class UartService
+  include LogBuilder
+
   attr_accessor :server, :port, :rate, :package, :retry_limit, :delay_time
   attr_reader   :retry_count
 
@@ -41,16 +43,18 @@ class UartService
             @server.start_polling!
           end
           if response.nil?
-            ActionCable.server.broadcast('servers_channel', { html: "[#{DateTime.now.strftime('%F %T')}]\t(server##{@server.id})<span class='text-warning'>\tInvalid answer for port #{@port}...</span>", dom_id: "server_#{@server.id}", event_id: 2 })
+            html = build_html log_object: server.name, log_text: "Invalid answer for port #{@port}...", class: 'text-warning'
           else
             @retry_count = 0
-            ActionCable.server.broadcast('servers_channel', { html: "<p class='text-success'>Time: #{DateTime.now.strftime('%F %T')}\t\tValue: #{response[2..6].unpack1('F')}</p>", dom_id: "server_#{@server.id}", event_id: 2 })
+            html = build_html log_object: server.name, log_text: "Value: #{response[2..6].unpack1('F')}", class: 'text-success'
           end
+          ActionCable.server.broadcast('servers_channel', { html:, event_id: 'terminal_update' })
         end
 
       else
         @retry_count += 1
-        ActionCable.server.broadcast('servers_channel', { html: "<p class='text-danger'>Port #{@port} is not available... Retry step #{@retry_count}</p>", dom_id: "server_#{@server.id}", event_id: 2 })
+        html = build_html log_object: server.name, log_text: "Port #{@port} is not available... Retry step #{@retry_count}", class: 'text-danger'
+        ActionCable.server.broadcast('servers_channel', { html:, event_id: 'terminal_update' })
 
         @server.panic! if @server.may_panic?
       end
@@ -66,7 +70,8 @@ class UartService
       server_id: @server.id,
       server_name: @server.name,
       thread: Thread.new do
-        ActionCable.server.broadcast('servers_channel', { html: "<p class='text-success'>#{I18n.t('thread.thread_started', server_id: @server.id)}</p>", dom_id: "server_#{@server.id}", event_id: 2 })
+        html = build_html log_text: I18n.t('thread.thread_started', server_id: @server.id), class: 'text-success', format: :time_text
+        ActionCable.server.broadcast('servers_channel', { html:, event_id: 'terminal_update' })
 
         polling
       end
@@ -92,7 +97,9 @@ class UartService
       server_thread[:thread].kill
       $servers_threads.delete(server_thread) # rubocop :disable Style/GlobalVars
 
-      ActionCable.server.broadcast('servers_channel', { html: "#{I18n.t('thread.thread_stopped', server_id: @server.id)}", dom_id: "server_#{@server.id}", event_id: 2 })
+      html = build_html log_text: I18n.t('thread.thread_stopped', server_id: @server.id), class: 'text-success', format: :time_text
+      ActionCable.server.broadcast('servers_channel', { html:, event_id: 'terminal_update' })
+
       @server
     end
   end
