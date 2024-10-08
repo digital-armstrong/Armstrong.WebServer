@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_20_063225) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_07_111726) do
   create_table "ports", force: :cascade do |t|
     t.string "name"
     t.integer "rate"
@@ -29,5 +29,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_20_063225) do
     t.index ["name"], name: "index_servers_on_name", unique: true
   end
 
-  add_foreign_key "ports", "servers"
+  add_foreign_key "ports", "servers", on_delete: :cascade
 end
