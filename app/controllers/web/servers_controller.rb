@@ -12,12 +12,7 @@ class Web::ServersController < Web::ApplicationController
 
   def create
     @server = Server.build(server_params)
-
-    if @server.save
-      redirect_to root_path, notice: t('.success')
-    else
-      redirect_to root_path, alert: @server.errors.full_messages.join('. ')
-    end
+    @server.save
   end
 
   def start_polling

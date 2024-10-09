@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["container", "server"]
+  static targets = ["server"]
 
   connect(){
     this.dataFromAppCable = [];
@@ -10,34 +10,37 @@ export default class extends Controller {
       const terminal = document.getElementById('terminal');
       terminal.innerHTML = '';
     });
+
+    window.addEventListener('createServer', (event) => {
+      this.dataFromAppCable.push(event.detail);
+      this.htmlBuilder()
+    })
     window.addEventListener('updateServer', (event) => {
       this.dataFromAppCable.push(event.detail);
-      this.serverUpdate();
+      this.htmlBuilder(true)
     });
     window.addEventListener('terminalUpdate', (event) => {
       this.dataFromAppCable.push(event.detail);
-      this.appendToTerminal();
+      this.htmlBuilder()
     });
   }
 
   disconnect(){
     window.removeEventListener("updateServer");
     window.removeEventListener("terminalUpdate");
+    window.removeEventListener("createServer");
   }
 
-  serverUpdate() {
+  htmlBuilder(isReplace = false){
     this.dataFromAppCable.forEach(element => {
-      console.log(element)
-      const server = document.getElementById(element.dom_id);
-      server.innerHTML = element.html
-    this.dataFromAppCable = [];
-  });
-  }
-  appendToTerminal(){
-    this.dataFromAppCable.forEach(element => {
-      const terminal = document.getElementById('terminal');
-      terminal.insertAdjacentHTML('beforeend', element.html);
-      this.dataFromAppCable = [];
+      const htmlElementForEdit = document.getElementById(element.htmlId)
+      if (isReplace == true){
+        htmlElementForEdit.innerHTML = element.html
+      }
+      else{
+        htmlElementForEdit.insertAdjacentHTML('beforeend', element.html);
+      }
     });
+    this.dataFromAppCable = []
   }
 }

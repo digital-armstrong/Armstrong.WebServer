@@ -9,6 +9,6 @@ section.h-100#servers_table(data-controller="home")
           th = Port.human_attribute_name(:rate)
           th = Server.human_attribute_name(:aasm_state)
           th.x-pinned-th = t('.action')
-      tbody(data-home-target="server")
+      tbody#servers_body(data-home-target="server")
         - servers.each do |server|
           = render 'web/servers/server', server:

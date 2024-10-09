@@ -6,7 +6,8 @@ class Server < ApplicationRecord
   has_one :port, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
-  after_update_commit :change_state
+  after_update_commit :server_update
+  after_create_commit :server_create
   accepts_nested_attributes_for :port
 
   aasm column: :aasm_state do
@@ -28,8 +29,12 @@ class Server < ApplicationRecord
 
   private
 
-  def change_state
-    ActionCable.server.broadcast('servers_channel', { html: rendered_server, dom_id: "server_#{id}", event_id: 'server_update' })
+  def server_update
+    ActionCable.server.broadcast('servers_channel', { html: rendered_server, htmlId: "server_#{id}", eventId: 'server_update' })
+  end
+
+  def server_create
+    ActionCable.server.broadcast('servers_channel', { html: rendered_server, htmlId: 'servers_body', eventId: 'server_create' })
   end
 
   def rendered_server

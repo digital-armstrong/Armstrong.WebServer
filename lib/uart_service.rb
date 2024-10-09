@@ -48,13 +48,13 @@ class UartService
             @retry_count = 0
             html = build_html log_object: server.name, log_text: "Value: #{response[2..6].unpack1('F')}", class: 'text-success'
           end
-          ActionCable.server.broadcast('servers_channel', { html:, event_id: 'terminal_update' })
+          ActionCable.server.broadcast('servers_channel', { html:, eventId: 'terminal_update', htmlId: 'terminal' })
         end
 
       else
         @retry_count += 1
         html = build_html log_object: server.name, log_text: "Port #{@port} is not available... Retry step #{@retry_count}", class: 'text-danger'
-        ActionCable.server.broadcast('servers_channel', { html:, event_id: 'terminal_update' })
+        ActionCable.server.broadcast('servers_channel', { html:, eventId: 'terminal_update', htmlId: 'terminal' })
 
         @server.panic! if @server.may_panic?
       end
@@ -71,7 +71,7 @@ class UartService
       server_name: @server.name,
       thread: Thread.new do
         html = build_html log_text: I18n.t('thread.thread_started', server_id: @server.id), class: 'text-success', format: :time_text
-        ActionCable.server.broadcast('servers_channel', { html:, event_id: 'terminal_update' })
+        ActionCable.server.broadcast('servers_channel', { html:, eventId: 'terminal_update', htmlId: 'terminal' })
 
         polling
       end
@@ -98,7 +98,7 @@ class UartService
       $servers_threads.delete(server_thread) # rubocop :disable Style/GlobalVars
 
       html = build_html log_text: I18n.t('thread.thread_stopped', server_id: @server.id), class: 'text-success', format: :time_text
-      ActionCable.server.broadcast('servers_channel', { html:, event_id: 'terminal_update' })
+      ActionCable.server.broadcast('servers_channel', { html:, eventId: 'terminal_update', htmlId: 'terminal' })
 
       @server
     end
