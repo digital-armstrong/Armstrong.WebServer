@@ -11,17 +11,19 @@ RSpec.describe 'Servers', type: :request do
   end
 
   context 'Post /Server' do
-    let(:server) { FactoryBot.create(:server) }
-
+    server = FactoryBot.create(:server)
+    connected_devices = Dir.glob('/dev/ttyUSB*')
     it 'should start polling' do
       post start_polling_server_path(server)
       server.reload
-      puts server.aasm_state
-      expect(server.aasm_state).to eq('panic')
+      if connected_devices.any?(server.port.name)
+        expect(server.aasm_state).to eq('polling')
+      else
+        expect(server.aasm_state).to eq('panic')
+      end
     end
 
     it 'should stop polling' do
-      puts "#{server.aasm_state}"
       post stop_polling_server_path(server)
       server.reload
       expect(server.aasm_state).to eq('idle')
