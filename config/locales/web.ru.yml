@@ -9,3 +9,5 @@ ru:
     home:
       accordion:
         add_new: Создать сервер
+      terminal:
+        clear_terminal: Очистить терминал

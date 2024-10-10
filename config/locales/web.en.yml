@@ -9,3 +9,5 @@ en:
     home:
       accordion:
         add_new: Create server
+      terminal:
+        clear_terminal: Clear
