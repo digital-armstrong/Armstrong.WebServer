@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Web::ServersController < Web::ApplicationController
-  before_action :set_server, only: %i[start_polling stop_polling]
+  before_action :set_server, only: %i[start_polling stop_polling destroy]
   before_action :set_uart, only: %i[start_polling stop_polling]
 
   def show; end
@@ -13,6 +13,10 @@ class Web::ServersController < Web::ApplicationController
   def create
     @server = Server.build(server_params)
     @server.save
+  end
+
+  def destroy
+    @server.destroy
   end
 
   def start_polling

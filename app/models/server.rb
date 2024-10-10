@@ -10,6 +10,7 @@ class Server < ApplicationRecord
 
   after_update_commit :server_update
   after_create_commit :server_create
+  after_destroy_commit :server_detele
 
   aasm column: :aasm_state do
     state :idle, initial: true
@@ -38,6 +39,10 @@ class Server < ApplicationRecord
 
   def server_create
     ActionCable.server.broadcast('servers_channel', { html: rendered_server, htmlId: 'servers_body', eventId: 'server_create' })
+  end
+
+  def server_detele
+    ActionCable.server.broadcast('servers_channel', { htmlId: "server_#{id}", eventId: 'server_delete' })
   end
 
   def rendered_server

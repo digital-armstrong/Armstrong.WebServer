@@ -7,6 +7,8 @@ ru:
         start_thread_btn: "Запустить поток опроса"
         stop_thread_btn: "Прервать поток опроса"
         stop_confirm: "Остановить поток?"
+        delete_server_btn: "Удалить сервер"
+        delete_server_confirm: "Удалить сервер?"
     home:
       accordion:
         add_new: Создать сервер

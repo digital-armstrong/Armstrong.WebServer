@@ -9,3 +9,8 @@
     data: { turbo_confirm: t('.stop_confirm'), turbo_method: :post },
     class: 'btn btn-lg' do
       i.bi.bi-stop-btn-fill.text-danger
+  div(title="#{t('.delete_server_btn')}")
+    = link_to server_path(server),
+    data: { turbo_confirm: t('.delete_server_confirm'), turbo_method: :delete },
+    class: 'btn btn-lg' do
+      i.bi.bi-trash.text-danger
