@@ -12,27 +12,22 @@ class Web::ServersController < Web::ApplicationController
 
   def create
     @server = Server.build(server_params)
-
-    if @server.save
-      redirect_to root_path, notice: t('.success')
-    else
-      redirect_to root_path, alert: @server.errors.full_messages.join('. ')
-    end
+    @server.save
   end
 
   def start_polling
-    server_to_start = @uart.start_polling
-    server_to_start.start_polling! if server_to_start&.may_start_polling?
+    server = @uart.start_polling
+    return unless server&.may_start_polling?
 
-    respond_to { |format| format.turbo_stream }
+    server.start_polling!
   end
 
   def stop_polling
-    server_to_stop = @uart.stop_polling
+    server = @uart.stop_polling
 
-    server_to_stop.ready_to_polling! if server_to_stop&.may_ready_to_polling?
+    return unless server&.may_ready_to_polling?
 
-    respond_to { |format| format.turbo_stream }
+    server.ready_to_polling!
   end
 
   private

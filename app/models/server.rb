@@ -4,10 +4,12 @@ class Server < ApplicationRecord
   include AASM
 
   has_one :port, dependent: :destroy
+  accepts_nested_attributes_for :port
 
   validates :name, presence: true, uniqueness: true
 
-  accepts_nested_attributes_for :port
+  after_update_commit :server_update
+  after_create_commit :server_create
 
   aasm column: :aasm_state do
     state :idle, initial: true
@@ -24,5 +26,21 @@ class Server < ApplicationRecord
     event :panic do
       transitions from: :polling, to: :panic
     end
+  end
+
+  private
+
+  # TODO: maybe we need create repository?
+  #       need discussion about it.
+  def server_update
+    ActionCable.server.broadcast('servers_channel', { html: rendered_server, htmlId: "server_#{id}", eventId: 'server_update' })
+  end
+
+  def server_create
+    ActionCable.server.broadcast('servers_channel', { html: rendered_server, htmlId: 'servers_body', eventId: 'server_create' })
+  end
+
+  def rendered_server
+    ApplicationController.renderer.render(partial: 'web/servers/server_row', locals: { server: self })
   end
 end
