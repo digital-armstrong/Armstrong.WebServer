@@ -15,17 +15,6 @@ class UartService
     @retry_count = 0
     @retry_limit = args[:retry_limit] || 5
     @delay_time  = args[:delay_time]  || 5
-
-    print_info
-  end
-
-  def print_info
-    Rails.logger.debug "\n\n================================"
-    Rails.logger.debug { "Port:\t\t#{@port}" }
-    Rails.logger.debug { "Retry Limit:\t#{@retry_limit}" }
-    Rails.logger.debug { "Package:\t#{@package}" }
-    Rails.logger.debug { "Delay Time:\t#{@delay_time}" }
-    Rails.logger.debug "================================\n\n"
   end
 
   def port_available?
