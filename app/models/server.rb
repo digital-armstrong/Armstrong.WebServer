@@ -4,11 +4,12 @@ class Server < ApplicationRecord
   include AASM
 
   has_one :port, dependent: :destroy
+  accepts_nested_attributes_for :port
 
   validates :name, presence: true, uniqueness: true
+
   after_update_commit :server_update
   after_create_commit :server_create
-  accepts_nested_attributes_for :port
 
   aasm column: :aasm_state do
     state :idle, initial: true
@@ -29,6 +30,8 @@ class Server < ApplicationRecord
 
   private
 
+  # TODO: maybe we need create repository?
+  #       need discussion about it.
   def server_update
     ActionCable.server.broadcast('servers_channel', { html: rendered_server, htmlId: "server_#{id}", eventId: 'server_update' })
   end
