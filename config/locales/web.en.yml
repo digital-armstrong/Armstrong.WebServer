@@ -2,8 +2,9 @@ en:
   web:
     servers:
       servers_table:
+        actions: Actions
+      actions_buttons:
         start_thread_btn: "Start polling thread"
-        pause_thread_btn: "Pause polling thread"
         stop_thread_btn: "Stop polling thread"
         stop_confirm: "Do you want to stop thread?"
     home:

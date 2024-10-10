@@ -1,9 +1,10 @@
 ru:
   web:
     servers:
-      server:
+      servers_table:
+        actions: Действия
+      actions_buttons:
         start_thread_btn: "Запустить поток опроса"
-        pause_thread_btn: "Приостановить поток опроса"
         stop_thread_btn: "Прервать поток опроса"
         stop_confirm: "Остановить поток?"
     home:

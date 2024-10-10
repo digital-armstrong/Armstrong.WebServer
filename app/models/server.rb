@@ -41,6 +41,6 @@ class Server < ApplicationRecord
   end
 
   def rendered_server
-    ApplicationController.renderer.render(partial: 'web/servers/server', locals: { server: self })
+    ApplicationController.renderer.render(partial: 'web/servers/server_row', locals: { server: self })
   end
 end
