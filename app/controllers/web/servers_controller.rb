@@ -16,18 +16,18 @@ class Web::ServersController < Web::ApplicationController
   end
 
   def start_polling
-    server_to_start = @uart.start_polling
-    return unless server_to_start&.may_start_polling?
+    server = @uart.start_polling
+    return unless server&.may_start_polling?
 
-    server_to_start.start_polling!
+    server.start_polling!
   end
 
   def stop_polling
-    server_to_stop = @uart.stop_polling
+    server = @uart.stop_polling
 
-    return unless server_to_stop&.may_ready_to_polling?
+    return unless server&.may_ready_to_polling?
 
-    server_to_stop.ready_to_polling!
+    server.ready_to_polling!
   end
 
   private
