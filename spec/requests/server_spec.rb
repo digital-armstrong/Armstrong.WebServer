@@ -16,7 +16,6 @@ RSpec.describe 'Testing servers CRUD and any query', type: :request do
 
     connected_devices = Dir.glob('/dev/ttyUSB*')
     server_with_valid_port = FactoryBot.create(:server, name: FFaker::Name.name, port_attributes: { name: connected_devices.sample, rate: 9600 })
-    pp server_with_valid_port.id
     it 'should start polling and change server state to panic with invalid port' do
       post start_polling_server_path(server_with_invalid_port)
       server_with_invalid_port.reload
