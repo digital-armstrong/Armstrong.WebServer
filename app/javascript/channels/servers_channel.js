@@ -11,7 +11,6 @@ consumer.subscriptions.create("ServersChannel", {
 
   received(data) {
     var event;
-    console.log("data: ", data);
     switch (data.eventId) {
       case 'server_update':
         event = new CustomEvent('updateServer', { detail: data });
