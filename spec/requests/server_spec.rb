@@ -24,7 +24,7 @@ RSpec.describe 'Testing servers CRUD and any query', type: :request do
     end
 
     it 'should start polling and change server state to polling with valid port' do
-      post start_polling_server_path(server_with_valid_port)
+      post start_polling_server_path(server_with_valid_port.id)
       server_with_valid_port.reload
       expect(server_with_valid_port.aasm_state).to eq('polling')
     end
@@ -33,7 +33,7 @@ RSpec.describe 'Testing servers CRUD and any query', type: :request do
       post stop_polling_server_path(server_with_invalid_port)
       server_with_invalid_port.reload
       expect(server_with_invalid_port.aasm_state).to eq('idle')
-      post stop_polling_server_path(server_with_valid_port)
+      post stop_polling_server_path(server_with_valid_port.id)
       server_with_valid_port.reload
       expect(server_with_valid_port.aasm_state).to eq('idle')
     end
