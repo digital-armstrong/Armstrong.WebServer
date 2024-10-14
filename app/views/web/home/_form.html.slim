@@ -4,5 +4,5 @@
     = f.simple_fields_for :port do |p|
       .nested-fields
         = p.input :name, collection: @connected_devices, include_blank: false
-        = p.input :rate, collection: @rates, include_blank: false
+        = p.input :rate, collection: @rates, include_blank: false, selected: 9600
   = f.button :submit, class: 'btn btn-primary'

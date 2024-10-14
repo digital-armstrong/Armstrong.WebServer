@@ -14,10 +14,14 @@ export default class extends Controller {
     window.addEventListener('createServer', (event) => {
       this.dataFromAppCable.push(event.detail);
       this.htmlBuilder()
-    })
+    });
     window.addEventListener('updateServer', (event) => {
       this.dataFromAppCable.push(event.detail);
       this.htmlBuilder(true)
+    });
+    window.addEventListener('serverDelete', (event) => {
+      this.dataFromAppCable.push(event.detail);
+      this.htmlEraser(event.detail.htmlId)
     });
     window.addEventListener('terminalUpdate', (event) => {
       this.dataFromAppCable.push(event.detail);
@@ -26,9 +30,10 @@ export default class extends Controller {
   }
 
   disconnect(){
-    window.removeEventListener("updateServer");
-    window.removeEventListener("terminalUpdate");
     window.removeEventListener("createServer");
+    window.removeEventListener("updateServer");
+    window.removeEventListener("deleteServer");
+    window.removeEventListener("terminalUpdate");
   }
 
   htmlBuilder(isReplace = false){
@@ -41,6 +46,12 @@ export default class extends Controller {
         htmlElementForEdit.insertAdjacentHTML('beforeend', element.html);
       }
     });
+    this.dataFromAppCable = []
+  }
+
+  htmlEraser(elementId){
+    const element = document.getElementById(elementId);
+    element.remove();
     this.dataFromAppCable = []
   }
 }

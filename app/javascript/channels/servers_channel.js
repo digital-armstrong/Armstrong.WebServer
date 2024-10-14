@@ -11,13 +11,15 @@ consumer.subscriptions.create("ServersChannel", {
 
   received(data) {
     var event;
-    console.log(data)
     switch (data.eventId) {
       case 'server_update':
         event = new CustomEvent('updateServer', { detail: data });
         break;
       case 'server_create':
         event = new CustomEvent('createServer', { detail: data });
+        break;
+      case 'server_delete':
+        event = new CustomEvent('serverDelete', { detail: data });
         break;
       case 'terminal_update':
         event = new CustomEvent('terminalUpdate', { detail: data });
