@@ -7,6 +7,7 @@ ru:
         start_thread_btn: "Запустить поток опроса"
         stop_thread_btn: "Прервать поток опроса"
         stop_confirm: "Остановить поток?"
+        edit_server_btn: "Редактировать сервер"
         delete_server_btn: "Удалить сервер"
         delete_server_confirm: "Удалить сервер?"
     home:
