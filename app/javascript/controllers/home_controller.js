@@ -10,7 +10,6 @@ export default class extends Controller {
       const terminal = document.getElementById('terminal');
       terminal.innerHTML = '';
     });
-
     window.addEventListener('createServer', (event) => {
       this.dataFromAppCable.push(event.detail);
       this.htmlBuilder()

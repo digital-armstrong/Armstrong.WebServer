@@ -19,26 +19,39 @@ class Web::ServersController < Web::ApplicationController
 
   def create
     @server = Server.build(server_params)
-    @server.save
+    if @server.save
+      helpers.send_notification(t('success', scope: 'web.notification.server.create'), 'success')
+    else
+      helpers.send_notification(t('error', scope: 'web.notification.server.create'), 'danger')
+    end
   end
 
   def update
     if @server.update(server_params)
+      flash[:success] = t('success', scope: 'web.notification.server.update')
       redirect_to root_path
     else
-      Rails.logger.debug('server update error')
+      flash.now[:alert] = @server.errors.full_messages.join('. ').to_s
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     return unless @server.idle?
 
-    @server.destroy
+    if @server.destroy
+      helpers.send_notification(t('success', scope: 'web.notification.server.delete'), 'success')
+    else
+      helpers.send_notification(t('error', scope: 'web.notification.server.delete'), 'danger')
+    end
   end
 
   def start_polling
     server = @uart.start_polling
-    return unless server&.may_start_polling?
+    unless server&.may_start_polling?
+      helpers.send_notification(t('error_start', scope: 'web.notification.server.polling'), 'danger')
+      return
+    end
 
     server.start_polling!
   end
@@ -46,7 +59,10 @@ class Web::ServersController < Web::ApplicationController
   def stop_polling
     server = @uart.stop_polling
 
-    return unless server&.may_ready_to_polling?
+    unless server&.may_ready_to_polling?
+      helpers.send_notification(t('error_stop', scope: 'web.notification.server.polling'), 'danger')
+      return
+    end
 
     server.ready_to_polling!
   end

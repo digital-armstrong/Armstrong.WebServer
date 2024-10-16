@@ -1,0 +1,19 @@
+en:
+  web:
+    notification:
+      server:
+        delete:
+          success: "Server was successfully deleted."
+          error: "Failed to delete server."
+          polling: "Server is now in polling mode."
+        create:
+          success: "Server was successfully created."
+          error: "Failed to create server."
+        update:
+          success: "Server was successfully updated."
+          error: "Failed to update server."
+        edit:
+          polling: "Server is now in polling mode."
+        polling:
+          error_start: "Failed to start polling."
+          error_stop: "Failed to stop polling."

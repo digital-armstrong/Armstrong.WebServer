@@ -25,12 +25,9 @@ class UartService
     loop do
       if port_available?
         UART.open @port do |serial|
+          @server.start_polling! if @server.panic?
           serial.write package.pack('C8')
           response = serial.read(8)
-          if @server.may_ready_to_polling? && !@server.polling?
-            @server.ready_to_polling!
-            @server.start_polling!
-          end
           if response.nil?
             html = build_html log_object: server.name, log_text: "Invalid answer for port #{@port}...", class: 'text-warning'
           else
@@ -45,9 +42,12 @@ class UartService
         html = build_html log_object: server.name, log_text: "Port #{@port} is not available... Retry step #{@retry_count}", class: 'text-danger'
         ActionCable.server.broadcast('servers_channel', { html:, eventId: 'terminal_update', htmlId: 'terminal' })
 
-        @server.panic! if @server.may_panic?
+        if @server.may_panic?
+          @server.panic!
+          rendered_server = ApplicationController.renderer.render(partial: 'web/servers/server_row', locals: { server: @server })
+          ActionCable.server.broadcast('servers_channel', { html: rendered_server, htmlId: "server_#{server.id}", eventId: 'server_update' })
+        end
       end
-
       sleep(@delay_time)
     end
   end
