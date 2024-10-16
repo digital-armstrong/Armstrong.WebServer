@@ -1,0 +1,17 @@
+ru:
+  activerecord:
+    models:
+      servers: Серверы
+      server: Сервер
+    attributes:
+      server:
+        id: ID
+        name: Имя сервера
+        aasm_state: Состояние сервера
+      port:
+        name: Название порта
+        rate: Скорость порта
+    errors:
+      messages:
+        blank: не может быть пустым
+        taken: уже существует

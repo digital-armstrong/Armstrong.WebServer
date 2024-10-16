@@ -2,7 +2,16 @@ en:
   web:
     servers:
       servers_table:
+        actions: Actions
+      actions_buttons:
         start_thread_btn: "Start polling thread"
-        pause_thread_btn: "Pause polling thread"
         stop_thread_btn: "Stop polling thread"
         stop_confirm: "Do you want to stop thread?"
+        edit_server_btn: "Edit server"
+        delete_server_btn: "Delete server"
+        delete_server_confirm: "Do you want to delete server?"
+    home:
+      accordion:
+        add_new: Create server
+      terminal:
+        clear_terminal: Clear
