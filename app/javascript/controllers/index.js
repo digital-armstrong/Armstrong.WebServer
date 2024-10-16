@@ -5,4 +5,6 @@
 import { application } from "./application"
 
 import HomeController from "./home_controller"
+import NotificationController from "./notification_controller"
 application.register("home", HomeController)
+application.register("notification", NotificationController)

@@ -21,7 +21,7 @@ class Server < ApplicationRecord
     end
 
     event :start_polling do
-      transitions from: :idle, to: :polling
+      transitions from: %i[idle panic], to: :polling
     end
 
     event :panic do
